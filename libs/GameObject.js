@@ -4,7 +4,6 @@ const OverlapTester = require("./OverlapTester");
 // ゲームオブジェクトクラス
 // ・タンク、壁、弾丸の親クラス
 module.exports = class GameObject {
-
   // コンストラクタ
   constructor(fWidth, fHeight, fX, fY, fAngle) {
     this.fWidth = fWidth; // 幅
@@ -17,7 +16,6 @@ module.exports = class GameObject {
     this.setPos(fX, fY);
   }
 
-  
   toJSON() {
     return {
       fX: this.fX,
@@ -26,24 +24,22 @@ module.exports = class GameObject {
     };
   }
 
-  setPos(fX.fY)
-  {
+  setPos(fX, fY) {
     this.fX = fX;
     this.fY = fY;
     this.rectBound = {
       fLeft: fX - this.fWidth * 0.5,
       fBottom: fY - this.fHeight * 0.5,
       fRight: fX + this.fWidth * 0.5,
-      fTop: fY + this.fHeight * 0.5
+      fTop: fY + this.fHeight * 0.5,
     };
   }
 
   overlapWalls(setWall) {
-    return Array.from(setWall).some(
-      (wall) => {
-        if (OverlapTester.overlapRects(this.rectBound, wall.rectBound)) {
-          return true;
-        }
-      });
+    return Array.from(setWall).some((wall) => {
+      if (OverlapTester.overlapRects(this.rectBound, wall.rectBound)) {
+        return true;
+      }
+    });
   }
 };
