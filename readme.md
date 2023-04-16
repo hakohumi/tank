@@ -7,3 +7,7 @@ tsの勉強です。
 このサイトを参考にさせていただいております。
 
 ## todo
+
+- 開発環境の構築
+  - Volta + Node.js + Vite + TypeScript
+    - `npm create vite@latest`
