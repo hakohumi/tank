@@ -13,7 +13,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "baseUrl": "./" /* Base directory to resolve non-absolute module names. */,
+    "outDir": "./dist",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src"]
+  // "include": ["src"]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "index.ts"]
 }
