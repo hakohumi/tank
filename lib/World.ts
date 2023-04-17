@@ -6,7 +6,7 @@ export class World {
   }
 
   // 更新処理
-  update(fDeltaTime) {
+  update(fDeltaTime: number) {
     // オブジェクトの座標値の更新
     this.updateObjects(fDeltaTime)
 
@@ -18,11 +18,11 @@ export class World {
   }
 
   // オブジェクトの座標値の更新
-  updateObjects(fDeltaTime) {}
+  updateObjects(fDeltaTime: number) {}
 
   // 衝突のチェック
   checkCollisions() {}
 
   // 新たな行動
-  doNewActions(fDeltaTime) {}
+  doNewActions(fDeltaTime: number) {}
 }
