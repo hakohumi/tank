@@ -4,6 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "serv":"vite-node index.ts",
+    "serv-watch": "vite-node --watch index.ts",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
