@@ -13,6 +13,8 @@ app.get('/', (_, res) => {
 
 console.log(`__dirname: ${__dirname}`)
 
+// ファイルを静的に配置する
+// https://teno-hira.com/media/?p=1621
 app.use(express.static(__dirname + '/public'))
 
 app.listen(port, () => {
