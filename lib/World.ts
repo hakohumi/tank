@@ -18,11 +18,15 @@ export class World {
   }
 
   // オブジェクトの座標値の更新
-  updateObjects(fDeltaTime: number) {}
+  updateObjects(fDeltaTime: number) {
+    // console.log(`in updateObjects fDeltaTime: ${fDeltaTime}`)
+  }
 
   // 衝突のチェック
   checkCollisions() {}
 
   // 新たな行動
-  doNewActions(fDeltaTime: number) {}
+  doNewActions(fDeltaTime: number) {
+    // console.log(`in doNewActions fDeltaTime: ${fDeltaTime}`)
+  }
 }

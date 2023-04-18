@@ -4,32 +4,38 @@ import http from 'http'
 import socketIO from 'socket.io'
 import { Game } from 'lib/Game.ts'
 
-// オブジェクト
-const app = express()
-const server = http.createServer(app)
-const io = new socketIO.Server<
-  ClientToServerEvents,
-  ServerToClientEvents,
-  InterServerEvents,
-  SocketData
->(server)
+async function createMainServer() {
+  // オブジェクト
+  const app = express()
+  const server = http.createServer(app)
+  //   const io = new socketIO.Server<
+  //     ClientToServerEvents,
+  //     ServerToClientEvents,
+  //     InterServerEvents,
+  //     SocketData
+  //   >(server)
 
-const port = 3000
+  const io = server
 
-app.get('/', (_, res) => {
-  res.send('Hello World!')
-})
+  const port = 3000
 
-// ゲームの作成と開始
-const game = new Game()
-game.start(io)
+  app.get('/', (_, res) => {
+    res.send('Hello World!')
+  })
 
-console.log(`__dirname: ${__dirname}`)
+  // ゲームの作成と開始
+  const game = new Game()
+  game.start(io)
 
-// ファイルを静的に配置する
-// https://teno-hira.com/media/?p=1621
-app.use(express.static(__dirname + '/public'))
+  console.log(`__dirname: ${__dirname}`)
 
-app.listen(port, () => {
-  console.log(`Example app listening on port http://localhost:${port}`)
-})
+  // ファイルを静的に配置する
+  // https://teno-hira.com/media/?p=1621
+  app.use(express.static(__dirname + '/public'))
+
+  app.listen(port, () => {
+    console.log(`Example app listening on port http://localhost:${port}`)
+  })
+}
+
+createMainServer()

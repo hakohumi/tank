@@ -4,7 +4,7 @@ import { World } from './World.ts'
 // 設定
 import { GameSettings } from './GameSettings.ts'
 
-import socketIO from 'socket.io'
+import { Server } from 'socket.io'
 
 // ゲームクラス
 // ・ワールドを保持する
@@ -12,7 +12,7 @@ import socketIO from 'socket.io'
 // ・周期的処理を有する
 export class Game {
   // 始動
-  start(io: socketIO.Server) {
+  start(io: Server) {
     // 変数
     const world = new World(io) // setInterval()内での参照があるので、スコープを抜けても、生存し続ける（ガーベッジコレクションされない）。
     let iTimeLast = Date.now() // setInterval()内での参照があるので、スコープを抜けても、生存し続ける（ガーベッジコレクションされない）。
@@ -37,7 +37,7 @@ export class Game {
       const iTimeCurrent = Date.now() // ミリ秒単位で取得
       const fDeltaTime = (iTimeCurrent - iTimeLast) * 0.001 // 秒に変換
       iTimeLast = iTimeCurrent
-      //console.log( 'DeltaTime = %f[s]', fDeltaTime );
+      //   console.log( 'DeltaTime = %f[s]', fDeltaTime );
 
       // 処理時間計測用
       const hrtime = process.hrtime() // ナノ秒単位で取得

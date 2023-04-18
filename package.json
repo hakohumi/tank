@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "serv":"vite-node index.ts",
+    "serv": "vite-node index.ts",
     "serv-watch": "vite-node --watch index.ts",
     "dev": "vite",
     "build": "tsc && vite build",
@@ -16,8 +16,7 @@
     "@types/socket.io": "^3.0.2",
     "typescript": "^5.0.4",
     "vite": "^4.2.0",
-    "vite-node": "^0.30.1",
-    "vite-plugin-node": "^3.0.2"
+    "vite-node": "^0.30.1"
   },
   "dependencies": {
     "express": "^4.18.2",
