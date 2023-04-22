@@ -14,3 +14,7 @@ tsの勉強です。
     - バックエンド
       - vite-node
         - <https://scrapbox.io/dojineko/vite-node>
+    - フロントエンド (./client)
+      - <https://ja.vitejs.dev/guide/>
+      - `npm create vite@latest`
+      -
