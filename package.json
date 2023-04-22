@@ -9,6 +9,7 @@
     "serv-watch": "vite-node --watch server/src/index.ts",
     "dev": "vite",
     "build": "tsc && vite build",
+    "build-client": "tsc client",
     "preview": "vite preview"
   },
   "devDependencies": {

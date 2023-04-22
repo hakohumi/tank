@@ -1,5 +1,5 @@
 // 描画に関する設定クラス
-class RenderingSettings {
+export class RenderingSettings {
   // 背景タイルのサイズ
   static get FIELDTILE_WIDTH() {
     return 512

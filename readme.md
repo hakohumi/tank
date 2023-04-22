@@ -18,3 +18,5 @@ tsの勉強です。
       - <https://ja.vitejs.dev/guide/>
       - `npm create vite@latest`
       -
+
+- [x] 01．ゲームの骨格を作る

@@ -1,10 +1,26 @@
+import { Socket } from 'socket.io-client'
+import { Assets } from './Assets'
+import { SharedSettings } from './SharedSettings'
+import { RenderingSettings } from './RenderingSettings'
+
 // スクリーンクラス
-class Screen {
-  // コンストラクタ
-  constructor(socket, canvas) {
+export class Screen {
+  socket: Socket
+  canvas: HTMLCanvasElement
+  context: CanvasRenderingContext2D
+  assets: Assets
+  iProcessingTimeNanoSec
+
+  constructor(socket: Socket, canvas: HTMLCanvasElement) {
     this.socket = socket
     this.canvas = canvas
-    this.context = canvas.getContext('2d')
+    let context = canvas.getContext('2d')
+
+    if (context == null) {
+      throw new Error('not context')
+    }
+
+    this.context = context
 
     this.assets = new Assets()
     this.iProcessingTimeNanoSec = 0
@@ -18,9 +34,9 @@ class Screen {
 
     // コンテキストの初期化
     // アンチエイリアスの抑止（画像がぼやけるのの防止）以下４行
-    this.context.mozImageSmoothingEnabled = false
-    this.context.webkitImageSmoothingEnabled = false
-    this.context.msImageSmoothingEnabled = false
+    // this.context.mozImageSmoothingEnabled = false
+    // this.context.webkitImageSmoothingEnabled = false
+    // this.context.msImageSmoothingEnabled = false
     this.context.imageSmoothingEnabled = false
   }
 
@@ -31,7 +47,7 @@ class Screen {
     // 　サーバーで、'connection'イベント
     // 　クライアントで、'connect'イベントが発生する
     this.socket.on('connect', () => {
-      console.log('connect : socket.id = %s', socket.id)
+      console.log('connect : socket.id = %s', this.socket.id)
       // サーバーに'enter-the-game'を送信
       this.socket.emit('enter-the-game')
     })
@@ -44,7 +60,7 @@ class Screen {
   }
 
   // アニメーション（無限ループ処理）
-  animate(iTimeCurrent) {
+  animate(iTimeCurrent: number) {
     requestAnimationFrame((iTimeCurrent) => {
       this.animate(iTimeCurrent)
     })
@@ -52,11 +68,11 @@ class Screen {
   }
 
   // 描画。animateから無限に呼び出される
-  render(iTimeCurrent) {
+  render(_iTimeCurrent: number) {
     //console.log( 'render' );
 
     // キャンバスのクリア
-    this.context.clearRect(0, 0, canvas.width, canvas.height)
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
     // キャンバスの塗りつぶし
     this.renderField()
@@ -65,7 +81,7 @@ class Screen {
     this.context.save()
     this.context.strokeStyle = RenderingSettings.FIELD_LINECOLOR
     this.context.lineWidth = RenderingSettings.FIELD_LINEWIDTH
-    this.context.strokeRect(0, 0, canvas.width, canvas.height)
+    this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height)
     this.context.restore()
 
     // 画面右上にサーバー処理時間表示
@@ -83,12 +99,11 @@ class Screen {
   renderField() {
     this.context.save()
 
-    let iCountX = parseInt(
-      SharedSettings.FIELD_WIDTH / RenderingSettings.FIELDTILE_WIDTH
-    )
-    let iCountY = parseInt(
+    let iCountX = SharedSettings.FIELD_WIDTH / RenderingSettings.FIELDTILE_WIDTH
+
+    let iCountY =
       SharedSettings.FIELD_HEIGHT / RenderingSettings.FIELDTILE_HEIGHT
-    )
+
     for (let iIndexY = 0; iIndexY < iCountY; iIndexY++) {
       for (let iIndexX = 0; iIndexX < iCountX; iIndexX++) {
         this.context.drawImage(

@@ -25,7 +25,7 @@ async function createMainServer() {
 
   // ファイルを静的に配置する
   // https://teno-hira.com/media/?p=1621
-  app.use(express.static(__dirname + '/../../public'))
+  app.use(express.static(__dirname + '/../../client/dist'))
 
   server.listen(port, () => {
     console.log(`Example app listening on port http://localhost:${port}`)

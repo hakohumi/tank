@@ -1,8 +1,8 @@
-// アセット群クラス
-class Assets {
-  // コンストラクタ
+export class Assets {
+  imageField: HTMLImageElement
+  rectFieldInFieldImage: { sx: number; sy: number; sw: number; sh: number }
+
   constructor() {
-    // 背景画像
     this.imageField = new Image()
     this.imageField.src = '../images/grass01.png'
 
