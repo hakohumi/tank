@@ -22,7 +22,8 @@ export class Game {
     // 　サーバーで、'connection'イベント
     // 　クライアントで、'connect'イベントが発生する
     io.on('connection', (socket) => {
-      console.log('connection : socket.id = %s', socket.id)
+      console.log(`connection : socket.id = ${socket.id}`)
+      console.log(`connection : socket.client = ${socket.client}`)
 
       // 切断時の処理の指定
       // ・クライアントが切断したら、サーバー側では'disconnect'イベントが発生する
