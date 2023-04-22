@@ -2,7 +2,7 @@
 import express from 'express'
 import http from 'http'
 import socketIO from 'socket.io'
-import { Game } from 'lib/Game.ts'
+import { Game } from 'libs/Game.ts'
 
 async function createMainServer() {
   // オブジェクト
@@ -15,7 +15,8 @@ async function createMainServer() {
   //     SocketData
   //   >(server)
 
-  const io = server
+  const io = new socketIO.Server(server)
+  // const io = server
 
   const port = 3000
 

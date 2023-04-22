@@ -3,9 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "./server/src/index.ts",
   "scripts": {
-    "serv": "vite-node index.ts",
-    "serv-watch": "vite-node --watch index.ts",
+    "serv": "vite-node server/src/index.ts",
+    "serv-watch": "vite-node --watch server/src/index.ts",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
