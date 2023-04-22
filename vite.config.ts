@@ -5,6 +5,6 @@ export default defineConfig({
     open: './server/src/index.ts',
   },
   build: {
-    outDir: '../public',
+    outDir: '../../public',
   },
 })
