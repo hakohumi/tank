@@ -11,5 +11,6 @@ tsの勉強です。
 - 開発環境の構築
   - Volta + Node.js + Vite + TypeScript
     - `npm create vite@latest`
-    - https://scrapbox.io/dojineko/vite-node
-
+    - バックエンド
+      - vite-node
+        - <https://scrapbox.io/dojineko/vite-node>
