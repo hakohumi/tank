@@ -18,7 +18,7 @@ export class World {
   }
 
   // オブジェクトの座標値の更新
-  updateObjects(fDeltaTime: number) {
+  updateObjects(_fDeltaTime: number) {
     // console.log(`in updateObjects fDeltaTime: ${fDeltaTime}`)
   }
 
@@ -26,7 +26,7 @@ export class World {
   checkCollisions() {}
 
   // 新たな行動
-  doNewActions(fDeltaTime: number) {
+  doNewActions(_fDeltaTime: number) {
     // console.log(`in doNewActions fDeltaTime: ${fDeltaTime}`)
   }
 }
