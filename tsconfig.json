@@ -18,9 +18,9 @@
     "baseUrl": "./" /* Base directory to resolve non-absolute module names. */,
     "outDir": "./dist",
     "paths": {
-      "@/*": ["./server/src/*"]
+      "@/*": ["./*"]
     }
   },
   // "include": ["src"]
-  "include": ["./server/src/**/*.ts", "libs"]
+  "include": ["./server/src/**/*.ts"]
 }

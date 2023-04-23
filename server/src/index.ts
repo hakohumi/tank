@@ -2,7 +2,7 @@
 import express from 'express'
 import http from 'http'
 import { Server } from 'socket.io'
-import { Game } from 'libs/Game.ts'
+import { Game } from './libs/Game.ts'
 
 async function createMainServer() {
   // オブジェクト
@@ -31,5 +31,5 @@ async function createMainServer() {
     console.log(`Example app listening on port http://localhost:${port}`)
   })
 }
-
+console.log(`process.env.NODE_ENV = ${process.env.NODE_ENV}`)
 createMainServer()
