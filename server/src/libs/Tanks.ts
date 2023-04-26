@@ -6,17 +6,16 @@ import { SharedSettings } from '../../../client/src/SharedSettings.ts'
 import { GameSettings } from './GameSettings'
 
 export interface ObjMovementType {
-  [key: string]: boolean
+  // [key: string]: boolean
+  forward: boolean
+  back: boolean
+  left: boolean
+  right: boolean
 }
 
 // タンククラス
 export class Tank extends GameObject {
-  objMovement: ObjMovementType = {
-    forward: false,
-    back: false,
-    left: false,
-    right: false,
-  }
+  objMovement: Partial<ObjMovementType>
   fSpeed: number
   fRotationSpeed: number
 
