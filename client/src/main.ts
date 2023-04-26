@@ -1,5 +1,6 @@
 import { connect } from 'socket.io-client'
 import { Screen } from './Screen'
+import { ObjMovementType } from '@Server/libs/Tanks'
 
 // オブジェクト
 const socket = connect() // クライアントからサーバーへの接続要求
@@ -23,3 +24,33 @@ if (canvas == null) {
     socket.disconnect()
   })
 }
+
+// キーの入力（キーダウン、キーアップ）の処理
+let objMovement: ObjMovementType = {} // 動作
+
+let keyboadEventListener = (eventName: 'keydown' | 'keyup') => {
+  document.addEventListener(eventName, (event: KeyboardEvent) => {
+    let KeyToCommand = {
+      ArrowUp: 'forward',
+      ArrowDown: 'back',
+      ArrowLeft: 'left',
+      ArrowRight: 'right',
+    } as { [k in string ]: string }
+
+    const command = KeyToCommand[event.key]
+
+    if (command) {
+      if (event.type === 'keydown') {
+        objMovement[command] = true
+      } // if( event.type === 'keyup' )
+      else {
+        objMovement[command] = false
+      }
+      // サーバーに イベント名'change-my-movement'と、objMovementオブジェクトを送信
+      socket.emit('change-my-movement', objMovement)
+    }
+  })
+}
+
+keyboadEventListener('keydown')
+keyboadEventListener('keyup')

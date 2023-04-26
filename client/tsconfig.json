@@ -22,7 +22,8 @@
     "baseUrl": "./" /* Base directory to resolve non-absolute module names. */,
     "outDir": "./dist",
     "paths": {
-      "@/*": ["./server/src/*"]
+      "@Server/*": ["../server/src/*"],
+      "@Client/*": ["./src/*"]
     }
   },
   "include": ["src"]

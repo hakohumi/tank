@@ -1,7 +1,9 @@
 import { Socket } from 'socket.io-client'
-import { Assets } from './Assets'
-import { SharedSettings } from './SharedSettings'
-import { RenderingSettings } from './RenderingSettings'
+import { Assets } from './Assets.ts'
+import { SharedSettings } from './SharedSettings.ts'
+import { RenderingSettings } from './RenderingSettings.ts'
+
+import { Tank } from '@Server/libs/Tanks.ts'
 
 // スクリーンクラス
 export class Screen {
@@ -9,7 +11,8 @@ export class Screen {
   canvas: HTMLCanvasElement
   context: CanvasRenderingContext2D
   assets: Assets
-  iProcessingTimeNanoSec
+  iProcessingTimeNanoSec: number
+  aTank: Array<Tank> | null
 
   constructor(socket: Socket, canvas: HTMLCanvasElement) {
     this.socket = socket
@@ -24,6 +27,8 @@ export class Screen {
 
     this.assets = new Assets()
     this.iProcessingTimeNanoSec = 0
+
+    this.aTank = null
 
     // キャンバスの初期化
     this.canvas.width = SharedSettings.FIELD_WIDTH
@@ -54,9 +59,13 @@ export class Screen {
 
     // サーバーからの状態通知に対する処理
     // ・サーバー側の周期的処理の「io.sockets.emit( 'update', ・・・ );」に対する処理
-    this.socket.on('update', (iProcessingTimeNanoSec) => {
-      this.iProcessingTimeNanoSec = iProcessingTimeNanoSec
-    })
+    this.socket.on(
+      'update',
+      (aTank: Array<Tank>, iProcessingTimeNanoSec: number) => {
+        this.aTank = aTank
+        this.iProcessingTimeNanoSec = iProcessingTimeNanoSec
+      }
+    )
   }
 
   // アニメーション（無限ループ処理）
@@ -68,14 +77,23 @@ export class Screen {
   }
 
   // 描画。animateから無限に呼び出される
-  render(_iTimeCurrent: number) {
-    //console.log( 'render' );
+  render(iTimeCurrent: number) {
+    // console.log('render')
 
     // キャンバスのクリア
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
     // キャンバスの塗りつぶし
     this.renderField()
+
+    // タンクの描画
+    if (null !== this.aTank) {
+      const fTimeCurrentSec = iTimeCurrent * 0.001 // iTimeCurrentは、ミリ秒。秒に変換。
+      const iIndexFrame = Math.floor((fTimeCurrentSec / 0.2) % 2) // フレーム番号
+      this.aTank.forEach((tank) => {
+        this.renderTank(tank, iIndexFrame)
+      })
+    }
 
     // キャンバスの枠の描画
     this.context.save()
@@ -119,6 +137,33 @@ export class Screen {
         ) // 描画先領域の大きさ
       }
     }
+
+    this.context.restore()
+  }
+
+  renderTank(tank: Tank, iIndexFrame: number) {
+    this.context.save()
+
+    // タンクの座標値に移動
+    this.context.translate(tank.fX, tank.fY)
+
+    // 画像描画
+    this.context.save()
+
+    this.context.rotate(tank.fAngle)
+
+    this.context.drawImage(
+      this.assets.imageItems,
+      this.assets.arectTankInItemsImage[iIndexFrame].sx,
+      this.assets.arectTankInItemsImage[iIndexFrame].sy, // 描画元画像の右上座標
+      this.assets.arectTankInItemsImage[iIndexFrame].sw,
+      this.assets.arectTankInItemsImage[iIndexFrame].sh, // 描画元画像の大きさ
+      -SharedSettings.TANK_WIDTH * 0.5, // 画像先領域の右上座標（領域中心が、原点になるように指定する）
+      -SharedSettings.TANK_HEIGHT * 0.5, // 画像先領域の右上座標（領域中心が、原点になるように指定する）
+      SharedSettings.TANK_WIDTH, // 描画先領域の大きさ
+      SharedSettings.TANK_HEIGHT
+    ) // 描画先領域の大きさ
+    this.context.restore()
 
     this.context.restore()
   }

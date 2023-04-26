@@ -5,6 +5,7 @@ import { World } from './World.ts'
 import { GameSettings } from './GameSettings.ts'
 
 import { Server } from 'socket.io'
+import { ObjMovementType, Tank } from './Tanks.ts'
 
 // ゲームクラス
 // ・ワールドを保持する
@@ -24,10 +25,35 @@ export class Game {
     io.on('connection', (socket) => {
       console.log(`connection : socket.id = ${socket.id}`)
 
+      let tank: Tank | null = null // コネクションごとのタンクオブジェクト。イベントをまたいで使用される。
+
+      // ゲーム開始時の処理の指定
+      // ・クライアント側の接続確立時の「socket.emit( 'enter-the-game' );」に対する処理
+      socket.on('enter-the-game', () => {
+        // 自タンクの作成
+        console.log('enter-the-game : socket.id = %s', socket.id)
+        tank = world.createTank()
+      })
+
+      // 移動コマンドの処理の指定
+      // ・クライアント側のキー入力時の「socket.emit( 'change-my-movement', objMovement );」に対する処理
+      socket.on('change-my-movement', (objMovement: ObjMovementType) => {
+        console.log('change-my-movement : socket.id = %s', socket.id)
+        if (!tank) {
+          return
+        }
+        tank.objMovement = objMovement // 動作
+      })
+
       // 切断時の処理の指定
       // ・クライアントが切断したら、サーバー側では'disconnect'イベントが発生する
       socket.on('disconnect', () => {
         console.log('disconnect : socket.id = %s', socket.id)
+        if (!tank) {
+          return
+        }
+        world.destroyTank(tank)
+        tank = null // 自タンクの解放
       })
     })
 
@@ -49,7 +75,11 @@ export class Game {
       const iNanosecDiff = hrtimeDiff[0] * 1e9 + hrtimeDiff[1]
 
       // 最新状況をクライアントに送信
-      io.emit('update', iNanosecDiff) // 送信
+      io.emit(
+        'update',
+        Array.from(world.setTank), // Setオブジェクトは送受信不可（SetにJSON変換が未定義だから？）。配列にして送信する。
+        iNanosecDiff
+      ) // 送信
     }, 1000 / GameSettings.FRAMERATE) // 単位は[ms]。1000[ms] / FRAMERATE[回]
   }
 }
