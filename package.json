@@ -5,8 +5,8 @@
   "type": "module",
   "main": "./server/src/index.ts",
   "scripts": {
-    "serv": "vite-node server/src/index.ts",
-    "serv-watch": "vite-node --watch server/src/index.ts",
+    "serv": "npm run build && vite-node server/src/index.ts",
+    "serv-watch": "npm run build && vite-node --watch server/src/index.ts",
     "dev": "vite",
     "build": "npm run build:client && tsc && vite build",
     "build:client": "cd client && tsc && vite build",

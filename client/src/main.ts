@@ -26,7 +26,12 @@ if (canvas == null) {
 }
 
 // キーの入力（キーダウン、キーアップ）の処理
-let objMovement: ObjMovementType = {} // 動作
+let objMovement: ObjMovementType = {
+  forward: false,
+  back: false,
+  left: false,
+  right: false,
+} // 動作
 
 let keyboadEventListener = (eventName: 'keydown' | 'keyup') => {
   document.addEventListener(eventName, (event: KeyboardEvent) => {
@@ -35,7 +40,7 @@ let keyboadEventListener = (eventName: 'keydown' | 'keyup') => {
       ArrowDown: 'back',
       ArrowLeft: 'left',
       ArrowRight: 'right',
-    } as { [k in string ]: string }
+    } as { [k in string]: string }
 
     const command = KeyToCommand[event.key]
 

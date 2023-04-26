@@ -16,12 +16,12 @@
     "skipLibCheck": true,
     "allowImportingTsExtensions": true,
     "baseUrl": "./" /* Base directory to resolve non-absolute module names. */,
-    "outDir": "./dist",
-    "paths": {
-      "@Server/*": ["server/src/*"],
-      "@Client/*": ["../client/src/*"]
-    }
+    "outDir": "./dist"
+    // "paths": {
+    //   "@Server/*": ["server/src/*"],
+    //   "@Client/*": ["../client/src/*"]
+    // }
   },
-  // "include": ["src"]
-  "include": ["./server/src/**/*", "./client/src/**/*"]
+  "include": ["server/src"]
+  // "include": ["./server/src/**/*", "./client/src/**/*"]
 }

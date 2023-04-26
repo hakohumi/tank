@@ -78,6 +78,7 @@ export class Game {
       io.emit(
         'update',
         Array.from(world.setTank), // Setオブジェクトは送受信不可（SetにJSON変換が未定義だから？）。配列にして送信する。
+        Array.from(world.setWall), // Setオブジェクトは送受信不可（SetにJSON変換が未定義だから？）。配列にして送信する。
         iNanosecDiff
       ) // 送信
     }, 1000 / GameSettings.FRAMERATE) // 単位は[ms]。1000[ms] / FRAMERATE[回]

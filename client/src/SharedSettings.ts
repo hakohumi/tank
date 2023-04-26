@@ -18,6 +18,14 @@ export class SharedSettings {
   static get TANK_HEIGHT() {
     return 80.0
   }
+
+  // 壁サイズ
+  static get WALL_WIDTH() {
+    return 250.0
+  }
+  static get WALL_HEIGHT() {
+    return 50.0
+  }
 }
 
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
