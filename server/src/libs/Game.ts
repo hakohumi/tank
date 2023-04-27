@@ -38,11 +38,21 @@ export class Game {
       // 移動コマンドの処理の指定
       // ・クライアント側のキー入力時の「socket.emit( 'change-my-movement', objMovement );」に対する処理
       socket.on('change-my-movement', (objMovement: ObjMovementType) => {
-        console.log('change-my-movement : socket.id = %s', socket.id)
+        // console.log('change-my-movement : socket.id = %s', socket.id)
         if (!tank) {
           return
         }
         tank.objMovement = objMovement // 動作
+      })
+
+      // ショット時の処理の指定
+      // ・クライアント側のキー入力時の「socket.emit( 'shoot' );」に対する処理
+      socket.on('shoot', () => {
+        //console.log( 'shoot : socket.id = %s', socket.id );
+        if (!tank) {
+          return
+        }
+        world.createBullet(tank) // ショット
       })
 
       // 切断時の処理の指定
@@ -79,6 +89,7 @@ export class Game {
         'update',
         Array.from(world.setTank), // Setオブジェクトは送受信不可（SetにJSON変換が未定義だから？）。配列にして送信する。
         Array.from(world.setWall), // Setオブジェクトは送受信不可（SetにJSON変換が未定義だから？）。配列にして送信する。
+        Array.from(world.setBullet), // Setオブジェクトは送受信不可（SetにJSON変換が未定義だから？）。配列にして送信する。
         iNanosecDiff
       ) // 送信
     }, 1000 / GameSettings.FRAMERATE) // 単位は[ms]。1000[ms] / FRAMERATE[回]

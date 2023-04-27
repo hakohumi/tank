@@ -54,6 +54,11 @@ let keyboadEventListener = (eventName: 'keydown' | 'keyup') => {
       // サーバーに イベント名'change-my-movement'と、objMovementオブジェクトを送信
       socket.emit('change-my-movement', objMovement)
     }
+
+    if (' ' === event.key && 'keydown' === event.type) {
+      // サーバーに イベント名'shoot'を送信
+      socket.emit('shoot')
+    }
   })
 }
 

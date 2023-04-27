@@ -3,17 +3,20 @@ import { Tank } from './Tanks.ts'
 import { Wall } from './Wall.ts'
 import { SharedSettings } from '../../../client/src/SharedSettings.ts'
 import { GameSettings } from './GameSettings.ts'
+import { Bullet } from './Bullet.ts'
 
 export class World {
   io: socketIO.Server
   setTank: Set<Tank>
   setWall: Set<Wall>
+  setBullet: Set<Bullet>
 
   constructor(io: socketIO.Server) {
     this.io = io // socketIO
 
     this.setTank = new Set() // タンクリスト
     this.setWall = new Set() // 壁リスト
+    this.setBullet = new Set() // 弾丸リスト
 
     // 壁の生成
     for (let i = 0; i < GameSettings.WALL_COUNT; i++) {
@@ -59,6 +62,27 @@ export class World {
     this.setTank.forEach((tank) => {
       tank.update(fDeltaTime, rectTankField, this.setWall)
     })
+
+    // 弾丸の可動域
+    const rectBulletField = {
+      fLeft: 0 + SharedSettings.BULLET_WIDTH * 0.5,
+      fBottom: 0 + SharedSettings.BULLET_HEIGHT * 0.5,
+      fRight: SharedSettings.FIELD_WIDTH - SharedSettings.BULLET_WIDTH * 0.5,
+      fTop: SharedSettings.FIELD_HEIGHT - SharedSettings.BULLET_HEIGHT * 0.5,
+    }
+
+    // 弾丸ごとの処理
+    this.setBullet.forEach((bullet) => {
+      const bDisappear = bullet.update(
+        fDeltaTime,
+        rectBulletField,
+        this.setWall
+      )
+      if (bDisappear) {
+        // 消失
+        this.destroyBullet(bullet)
+      }
+    })
   }
 
   // 衝突のチェック
@@ -92,5 +116,19 @@ export class World {
   destroyTank(tank: Tank) {
     // タンクリストリストからの削除
     this.setTank.delete(tank)
+  }
+
+  // 弾丸の生成
+  createBullet(tank: Tank) {
+    const bullet = tank.shoot()
+    if (bullet) {
+      this.setBullet.add(bullet)
+    }
+  }
+
+  // 弾丸の破棄
+  destroyBullet(bullet: Bullet) {
+    // 弾丸リストからの削除
+    this.setBullet.delete(bullet)
   }
 }

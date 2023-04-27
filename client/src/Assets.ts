@@ -11,7 +11,7 @@ export class Assets {
   imageItems: HTMLImageElement
   public arectTankInItemsImage: Array<IndexFrame>
   rectWallInItemsImage: IndexFrame
-
+  rectBulletInItemsImage: IndexFrame
   constructor() {
     this.imageField = new Image()
     this.imageField.src = '../images/grass01.png'
@@ -28,5 +28,7 @@ export class Assets {
     ]
 
     this.rectWallInItemsImage = { sx: 38, sy: 2, sw: 64, sh: 16 }
+
+    this.rectBulletInItemsImage = { sx: 104, sy: 2, sw: 8, sh: 8 }
   }
 }
