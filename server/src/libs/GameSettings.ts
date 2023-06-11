@@ -20,6 +20,10 @@ export class GameSettings {
     return 3.0
   } // 回転速度[rad/s]。1frameあたり0.1進む => 1/30[s] で0.1進む => 1[s]で3[rad]進む。
 
+  static get TANK_LIFE_MAX() {
+    return 10
+  }
+
   // 壁
   static get WALL_COUNT() {
     return 3

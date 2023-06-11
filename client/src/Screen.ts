@@ -93,14 +93,32 @@ export class Screen {
   render(iTimeCurrent: number) {
     // console.log('render')
 
+    // 自タンクの取得
+    let tankSelf: Tank | null = null
+
+    if (this.aTank !== null) {
+      this.aTank.some((tank) => {
+        if (tank.strSocketID === this.socket.id) {
+          // 自タンク
+          tankSelf = tank
+          return true
+        }
+      })
+
+      this.aTank.forEach((tank: Tank) => {
+        if (tank.strSocketID === this.socket.id) {
+          tankSelf = tank
+        }
+      })
+    }
+
     // キャンバスのクリア
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
     // キャンバスの塗りつぶし
     this.renderField()
-
     // タンクの描画
-    if (null !== this.aTank) {
+    if (this.aTank !== null) {
       const fTimeCurrentSec = iTimeCurrent * 0.001 // iTimeCurrentは、ミリ秒。秒に変換。
       const iIndexFrame = Math.floor((fTimeCurrentSec / 0.2) % 2) // フレーム番号
       this.aTank.forEach((tank) => {
@@ -109,14 +127,14 @@ export class Screen {
     }
 
     // 壁の描画
-    if (null !== this.aWall) {
+    if (this.aWall !== null) {
       this.aWall.forEach((wall) => {
         this.renderWall(wall)
       })
     }
 
     // 弾丸の描画
-    if (null !== this.aBullet) {
+    if (this.aBullet !== null) {
       this.aBullet.forEach((bullet) => {
         this.renderBullet(bullet)
       })
@@ -128,6 +146,16 @@ export class Screen {
     this.context.lineWidth = RenderingSettings.FIELD_LINEWIDTH
     this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height)
     this.context.restore()
+
+    // 画面左上に得点表示
+    if (tankSelf !== null) {
+      // if (tankSelf instanceof Tank) {
+      this.context.save()
+      this.context.font = RenderingSettings.SCORE_FONT
+      this.context.fillStyle = RenderingSettings.SCORE_COLOR
+      this.context.fillText('Score : ' + (tankSelf as Tank).iScore, 20, 40)
+      this.context.restore()
+    }
 
     // 画面右上にサーバー処理時間表示
     this.context.save()
@@ -191,6 +219,30 @@ export class Screen {
       SharedSettings.TANK_HEIGHT
     ) // 描画先領域の大きさ
     this.context.restore()
+
+    // ライフ
+    const fLifeCellWidth = SharedSettings.TANK_WIDTH / tank.iLifeMax
+    const fLifeCellStartX = -(fLifeCellWidth * tank.iLifeMax * 0.5)
+    // ゼロからライフ値まで：REMAINING_COLOR
+    {
+      this.context.fillStyle = RenderingSettings.LIFE_REMAINING_COLOR
+      this.context.fillRect(
+        fLifeCellStartX,
+        SharedSettings.TANK_WIDTH * 0.5,
+        fLifeCellWidth * tank.iLife,
+        10
+      )
+    }
+    // ライフ値からライフマックスまで：MISSING_COLOR
+    if (tank.iLife < tank.iLifeMax) {
+      this.context.fillStyle = RenderingSettings.LIFE_MISSING_COLOR
+      this.context.fillRect(
+        fLifeCellStartX + fLifeCellWidth * tank.iLife,
+        SharedSettings.TANK_WIDTH * 0.5,
+        fLifeCellWidth * (tank.iLifeMax - tank.iLife),
+        10
+      )
+    }
 
     this.context.restore()
   }

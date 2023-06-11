@@ -1,6 +1,7 @@
 import socketIO from 'socket.io'
 import { Tank } from './Tanks.ts'
 import { Wall } from './Wall.ts'
+import { OverlapTester } from './OverlapTester.ts'
 import { SharedSettings } from '../../../client/src/SharedSettings.ts'
 import { GameSettings } from './GameSettings.ts'
 import { Bullet } from './Bullet.ts'
@@ -86,7 +87,28 @@ export class World {
   }
 
   // 衝突のチェック
-  checkCollisions() {}
+  checkCollisions() {
+    // 弾丸ごとの処理
+    this.setBullet.forEach((bullet) => {
+      // タンクごとの処理
+      this.setTank.forEach((tank) => {
+        if (tank !== bullet.tank) {
+          // 発射元のタンクとの衝突処理はなし
+          if (OverlapTester.overlapRects(tank.rectBound, bullet.rectBound)) {
+            // 衝突
+            if (0 === tank.damage()) {
+              // ライフ無くなった
+              // タンクの削除
+              console.log('dead : socket.id = %s', tank.strSocketID)
+              this.destroyTank(tank)
+            }
+            this.destroyBullet(bullet)
+            bullet.tank.iScore++ // 当てたタンクの得点を加算する
+          }
+        }
+      })
+    })
+  }
 
   // 新たな行動
   doNewActions(_fDeltaTime: number) {
@@ -94,7 +116,7 @@ export class World {
   }
 
   // タンクの生成
-  createTank() {
+  createTank(strSocketID: string) {
     // タンクの可動域
     const rectTankField = {
       fLeft: 0 + SharedSettings.TANK_WIDTH * 0.5,
@@ -104,7 +126,7 @@ export class World {
     }
 
     // タンクの生成
-    const tank = new Tank(rectTankField, this.setWall)
+    const tank = new Tank(strSocketID, rectTankField, this.setWall)
 
     // タンクリストへの登録
     this.setTank.add(tank)

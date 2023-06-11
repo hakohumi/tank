@@ -32,14 +32,14 @@ export class Game {
       socket.on('enter-the-game', () => {
         // 自タンクの作成
         console.log('enter-the-game : socket.id = %s', socket.id)
-        tank = world.createTank()
+        tank = world.createTank(socket.id)
       })
 
       // 移動コマンドの処理の指定
       // ・クライアント側のキー入力時の「socket.emit( 'change-my-movement', objMovement );」に対する処理
       socket.on('change-my-movement', (objMovement: ObjMovementType) => {
         // console.log('change-my-movement : socket.id = %s', socket.id)
-        if (!tank) {
+        if (!tank || 0 === tank.iLife) {
           return
         }
         tank.objMovement = objMovement // 動作
@@ -49,7 +49,7 @@ export class Game {
       // ・クライアント側のキー入力時の「socket.emit( 'shoot' );」に対する処理
       socket.on('shoot', () => {
         //console.log( 'shoot : socket.id = %s', socket.id );
-        if (!tank) {
+        if (!tank || 0 === tank.iLife) {
           return
         }
         world.createBullet(tank) // ショット

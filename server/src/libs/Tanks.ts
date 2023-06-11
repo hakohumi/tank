@@ -26,9 +26,13 @@ export class Tank extends GameObject {
   fSpeed: number
   fRotationSpeed: number
   iTimeLastShoot: number
+  strSocketID: string
+  iLife: number
+  iLifeMax: number
+  iScore: number
 
   // コンストラクタ
-  constructor(rectField: Rect, setWall: Set<Wall>) {
+  constructor(strSocketID: string, rectField: Rect, setWall: Set<Wall>) {
     // 親クラスのコンストラクタ呼び出し
     super(
       SharedSettings.TANK_WIDTH,
@@ -38,11 +42,14 @@ export class Tank extends GameObject {
       Math.random() * 2 * Math.PI
     )
 
+    this.strSocketID = strSocketID
     this.objMovement = {} // 動作
     this.fSpeed = GameSettings.TANK_SPEED // 速度[m/s]。1frameあたり5進む => 1/30[s] で5進む => 1[s]で150進む。
     this.fRotationSpeed = GameSettings.TANK_ROTATION_SPEED // 回転速度[rad/s]。1frameあたり0.1進む => 1/30[s] で0.1進む => 1[s]で3[rad]進む。
-
     this.iTimeLastShoot = 0 // 最終ショット時刻
+    this.iLife = GameSettings.TANK_LIFE_MAX
+    this.iLifeMax = GameSettings.TANK_LIFE_MAX
+    this.iScore = 0
 
     // 障害物にぶつからない初期位置の算出
     do {
@@ -57,6 +64,15 @@ export class Tank extends GameObject {
       Math.random() * (SharedSettings.FIELD_WIDTH - SharedSettings.TANK_WIDTH)
     this.fY =
       Math.random() * (SharedSettings.FIELD_HEIGHT - SharedSettings.TANK_HEIGHT)
+  }
+
+  toJSON() {
+    return Object.assign(super.toJSON(), {
+      strSocketID: this.strSocketID,
+      iLife: this.iLife,
+      iLifeMax: this.iLifeMax,
+      iScore: this.iScore,
+    })
   }
   // 更新
   // ※rectField : フィールド矩形は、オブジェクト中心と判定する。（OverlapTester.pointInRect()）
@@ -153,5 +169,10 @@ export class Tank extends GameObject {
     const fX = this.fX + this.fWidth * 0.5 * Math.cos(this.fAngle)
     const fY = this.fY + this.fWidth * 0.5 * Math.sin(this.fAngle)
     return new Bullet(fX, fY, this.fAngle, this)
+  }
+
+  damage() {
+    this.iLife--
+    return this.iLife
   }
 }
